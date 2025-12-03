@@ -5,8 +5,11 @@
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=100G
 #SBATCH --time=28-00:00:00
-#SBATCH --output=/gpfs/data/brandeslab/Project/slurm_logs/%x_%j.out
-#SBATCH --error=/gpfs/data/brandeslab/Project/slurm_logs/%x_%j.err
+#SBATCH --output=/gpfs/scratch/an4477/slurm_logs/%x_%j.out
+#SBATCH --error=/gpfs/scratch/an4477/slurm_logs/%x_%j.err
+
+# === Create logs directory if it doesn't exist ===
+mkdir -p /gpfs/scratch/an4477/slurm_logs
 
 # === Load and activate conda environment ===
 module load anaconda3
