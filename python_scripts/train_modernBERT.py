@@ -52,6 +52,21 @@ class ModelArguments:
     max_position_embeddings: int = field(
         default=8192, metadata={"help": "Maximum sequence length for the model"}
     )
+    hidden_size: int = field(
+        default=768, metadata={"help": "Hidden size of the model"}
+    )
+    num_hidden_layers: int = field(
+        default=12, metadata={"help": "Number of hidden layers"}
+    )
+    num_attention_heads: int = field(
+        default=12, metadata={"help": "Number of attention heads"}
+    )
+    intermediate_size: int = field(
+        default=3072, metadata={"help": "Intermediate size in feedforward layers"}
+    )
+    local_attention: int = field(
+        default=512, metadata={"help": "Local attention window size"}
+    )
 
 
 @dataclass
@@ -201,7 +216,16 @@ def main():
     print_rank0("Tokenizer vocab size:", tokenizer.vocab_size)
 
     # Build model
-    model = ProteinBertModel(tokenizer.vocab_size, tokenizer).build()
+    model = ProteinBertModel(
+        vocab_size=tokenizer.vocab_size,
+        tokenizer=tokenizer,
+        hidden_size=model_args.hidden_size,
+        num_hidden_layers=model_args.num_hidden_layers,
+        num_attention_heads=model_args.num_attention_heads,
+        intermediate_size=model_args.intermediate_size,
+        max_position_embeddings=model_args.max_position_embeddings,
+        local_attention=model_args.local_attention,
+    ).build()
     model.gradient_checkpointing_enable()
     model.to(training_args.local_rank)
     # model.to(device=DEVICE)

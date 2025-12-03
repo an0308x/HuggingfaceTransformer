@@ -166,22 +166,38 @@ class UNetModernBERT(nn.Module):
 
 
 class ProteinBertModel:
-    def __init__(self, vocab_size, tokenizer):
+    def __init__(
+        self,
+        vocab_size,
+        tokenizer,
+        hidden_size=768,
+        num_hidden_layers=12,
+        num_attention_heads=12,
+        intermediate_size=3072,
+        max_position_embeddings=8192,
+        local_attention=512,
+    ):
         self.vocab_size = vocab_size
         self.tokenizer = tokenizer
+        self.hidden_size = hidden_size
+        self.num_hidden_layers = num_hidden_layers
+        self.num_attention_heads = num_attention_heads
+        self.intermediate_size = intermediate_size
+        self.max_position_embeddings = max_position_embeddings
+        self.local_attention = local_attention
 
     def build(self):
         config = ModernBertConfig(
             vocab_size=self.vocab_size,
-            max_position_embeddings=8192,
-            num_hidden_layers=12,
-            num_attention_heads=12,
-            hidden_size=768,
-            intermediate_size=3072,
+            max_position_embeddings=self.max_position_embeddings,
+            num_hidden_layers=self.num_hidden_layers,
+            num_attention_heads=self.num_attention_heads,
+            hidden_size=self.hidden_size,
+            intermediate_size=self.intermediate_size,
             type_vocab_size=1,
             hidden_activation="gelu",
             global_attn_every_n_layers=3,
-            local_attention=512,
+            local_attention=self.local_attention,
             deterministic_flash_attn=False,
             global_rope_theta=160000.0,
             local_rope_theta=10000.0,
